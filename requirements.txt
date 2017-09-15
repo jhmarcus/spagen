@@ -1,0 +1,5 @@
+edward
+numpy
+pandas
+scipy
+tensorflow
