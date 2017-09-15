@@ -26,22 +26,22 @@ class FactorAnalysis(object):
             spatial_effect: bool
                 include spatial random effect parameterized as a gaussian process
             sparse_loadings: bool
-
+                assume sparse prior on the loadings
         '''
+
         self.p, self.n = data.y.shape
         self.k = k
         self.spatial_effect = spatial_effect
         self.sparse_loadings = sparse_loadings
         self.n_iter = n_iter
         self.learning_rate = learning_rate
-        self._set_prior()
-        self._set_likelihood
 
-    def _set_prior(self)
+    def _prior(self)
+        '''sets prior distributions for posterior inference and variables for maximum likelihood inference
         '''
-        '''
+
         if self.sparse_loadings:
-            # l_ij ~ N(l_ij|0, sigma2_l_ij)
+            # l_ij ~ N(l_ij|0, sigma2_ij)
             self.sigma_l = tf.maximum(tf.nn.softplus(tf.Variable(tf.random_normal([self.n, self.k]))), 1e-4)
             self.l = ed.models.Normal(loc=tf.zeros([self.n, self.k]), scale=sigma_l)
         else:
@@ -58,9 +58,10 @@ class FactorAnalysis(object):
             # std dev of spatial variance component
             self.sigma_s = tf.maximum(tf.nn.softplus(tf.Variable(tf.random_normal([]))), 1e-4)
 
-    def _set_likelihood(self):
+    def _likelihood(self):
+        '''sets likelihood where the data is the genotype matrix
         '''
-        '''
+
         # likelihood covariance matrix
         if spatial_effect:
             # placeholder for geographic coordinates
@@ -76,9 +77,18 @@ class FactorAnalysis(object):
         # likelihood
         self.y = ed.models.MultivariateNormalTriL(loc=tf.zeros([p, n]), scale_tril=tf.cholesky(v))
 
-    def inference(self, n_iter=500, learning_rate=1e-4)
+    def _inference(self, n_iter=500, learning_rate=1e-4)
+        '''run variational em
+
+        TODO: add convergence criteria based on heldout data?
+
+        Args:
+            n_iter: int
+                number of epochs of variational em
+            learning_rate: float
+                learning rate for stochastic graident descent of ELBO
         '''
-        '''
+
         # TODO: check if scale here is correct way to parameterize
         self.ql = ed.models.Normal(loc=tf.Variable(tf.random_normal([self.n, self.K])), scale=self.sigma_l)
 
@@ -91,4 +101,16 @@ class FactorAnalysis(object):
         for i in range(inference.n_iter):
             info_dict = inference.update()
             inference.print_progress(info_dict)
+
+    def fit(self, n_iter=500, learning_rate=1e-4):
+
+        # TODO: figure out how to close tf session
+        with tf.Session() as sess:
+            self._prior()
+            self._likelihood()
+            self._inference(n_iter, learning_rate)
+
+            # TODO: extract point estimates here
+
+        #return point estimates
 
