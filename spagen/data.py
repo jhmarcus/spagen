@@ -7,16 +7,31 @@ import numpy as np
 
 
 class Data(object):
-    '''class for io and normalization of genotype data'''
+    '''Class for io and normalization of genotype data'''
 
     def __init__(self,
                  traw,
                  geo,
                  center=True,
                  scale=True,
-                 impute=True
+                 impute=True,
                  ):
+        '''Intialize data
 
+        Args:
+            traw: str
+                path to traw genotype file output from plink2
+            geo: str
+                path to clst file with columns [id, lon, lat, lab]
+            center: bool
+                center the genotype matrix i.e. each snp has mean 0 accross
+                individuals
+            scale: bool
+                scale the genotype matrix i.e. each SNP has unit variance
+                individuals
+            impute: bool
+                fill in missing data with mean accross individuals at that SNP
+        '''
         self._get_genotype_matrix(traw)
         self._get_geographic_coordinates(geo)
 
@@ -46,15 +61,14 @@ class Data(object):
             self._impute()
 
     def _get_genotype_matrix(self, traw):
-        '''get genotype matrix from provided traw plink file path
+        '''Get genotype matrix from provided traw plink file path
 
         Args:
             traw: str
                 path to traw genotype file output from plink2
         '''
-        # read and assign ids and snps
+        # read traw file
         geno_df = pd.read_table(traw, sep='\t')
-        self.snps = geno_df['SNP'].as_matrix()
 
         # get genotype matrix
         geno_df.drop(['CHR', 'SNP', '(C)M', 'POS', 'COUNTED', 'ALT'], axis=1, inplace=True)
@@ -62,10 +76,10 @@ class Data(object):
         self.y = geno_df.as_matrix()
 
     def _get_geographic_coordinates(self, geo):
-        '''get geographic coordinates from clst file path
+        '''Get geographic coordinates from clst file path
 
         Args:
-            clst: str
+            geo: str
                 path to clst file with columns [id, lon, lat, lab]
         '''
         geo_df = pd.read_table(geo, sep='\t')
@@ -78,26 +92,26 @@ class Data(object):
         self.lab = df['lab'].as_matrix()
 
     def _center(self):
-        '''mean center the data matrix
+        '''Mean center the data matrix
         '''
         mu = np.nanmean(self.y, axis=1, keepdims=True)
         self.y = self.y - mu
 
     def _scale(self):
-        '''scale the data matrix to unit variance
+        '''Scale the data matrix to unit variance
         '''
         sigma = np.nanstd(self.y, axis=1, keepdims=True)
         self.y = self.y / sigma
 
     def _impute(self):
-        '''replace nans with rowmeans
+        '''Replace nans with rowmeans
         '''
         mu = np.nanmean(self.y, axis=1, keepdims=True)
         idx = np.where(np.isnan(self.y))
         self.y[idx]=np.take(mu, idx[1])
 
     def subsample(self, n_samp, p_samp, seed=1990):
-        '''subsample the data
+        '''Subsample the data
 
         Args:
             p_samp: int
