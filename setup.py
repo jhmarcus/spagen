@@ -12,6 +12,7 @@ setup(
     description='spatial genetic models',
     author='Joseph Marcus / Hussein Al-Asadi',
     author_email='jhmarcus@uchicago.edu / halasadi@uchicago.edu',
+    tests_require=['pytest'],
     url='https://github.com/jhmarcus/spagen',
     packages=['spagen'],
     install_requires=required,

@@ -1,5 +1,14 @@
+cython
 edward
+geopandas
+gpy
+matplotlib
 numpy
 pandas
+pysal
+pysam
+pytest
 scipy
+seaborn
+shapely
 tensorflow
