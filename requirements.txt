@@ -2,6 +2,7 @@ click
 edward
 numpy
 pandas
+pytest
 scikit-learn
 scipy
 shapely

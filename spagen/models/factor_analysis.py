@@ -141,7 +141,7 @@ class FactorAnalysis(object):
 
             # intialize inference
             if self.spatial_effect:
-                inference = ed.KLqp({self.l: self.ql}, {self.y: self.dataset.genotypes.y, self.x_ph: self.dataset.locations.x})
+                inference = ed.KLqp({self.l: self.ql}, {self.y: self.dataset.genotypes.y, self.x_ph: self.dataset.positions.x})
                 inference.initialize(n_iter=n_iter)
             else:
                 inference = ed.KLqp({self.l: self.ql}, {self.y: self.dataset.genotypes.y})

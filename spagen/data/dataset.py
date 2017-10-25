@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import numpy as np
 
-from spagen.data import Genotypes, Locations
+from spagen.data import Genotypes, Positions
 
 
 class Dataset(object):
@@ -17,7 +17,7 @@ class Dataset(object):
                  impute=True,
                  n_samp=None,
                  p_samp=None,
-                 geojson=None):
+                 hull_buffer=2):
         '''
         Intialize the dataset
 
@@ -35,15 +35,17 @@ class Dataset(object):
                 number of individuals to subsample
             p_samp: int
                 number of snps to subsample
-            geojson: str
-                path to geojson file
+            hull_buffer: float
+                size of buffer so points dont exsist
+                at the very edge of the region i.e.
+                the edge of the convex hull
         '''
         self.genotypes = Genotypes(traw, normalize, impute, n_samp, p_samp)
-        self.locations = Locations(geo)
+        self.positions = Positions(geo, hull_buffer)
 
         # re-index geographic data if individuals are subsampled
         if n_samp != None:
-            self.locations.x = self.locations.x[self.genotypes.j,:]
-            self.locations.labels = self.locations.labels[self.genotypes.j]
+            self.positions.x = self.locations.x[self.genotypes.j,:]
+            self.positions.labels = self.locations.labels[self.genotypes.j]
 
 

@@ -71,17 +71,17 @@ class Genotypes(object):
         self.ids = np.array(geno_df.columns)
         self.y = geno_df.as_matrix()
 
-    def _normalize(self):
-        '''Mean center and scale the data matrix
-        '''
-        self.y = scale(self.y, axis=1)
-
     def _impute(self):
         '''Replace nans with rowmeans
         '''
         imp = Imputer(missing_values='NaN', strategy='mean', axis=1)
         imp.fit(self.y)
         self.y = imp.transform(self.y)
+
+    def _normalize(self):
+        '''Mean center and scale the data matrix
+        '''
+        self.y = scale(self.y, axis=1)
 
     def _subsample_snps(self, p_samp):
         '''Subsample the features
