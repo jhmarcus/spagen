@@ -4,8 +4,7 @@ from __future__ import print_function
 
 import numpy as np
 
-from spagen.data.genotypes import Genotypes
-from spagen.data.geography import Geography
+from spagen.data import Genotypes, Locations
 
 
 class Dataset(object):
@@ -40,11 +39,11 @@ class Dataset(object):
                 path to geojson file
         '''
         self.genotypes = Genotypes(traw, normalize, impute, n_samp, p_samp)
-        self.geography = Geography(geo)
+        self.locations = Locations(geo)
 
         # re-index geographic data if individuals are subsampled
         if n_samp != None:
-            self.geography.x = self.geography.x[self.genotypes.j,:]
-            self.geography.labels = self.geography.labels[self.genotypes.j]
+            self.locations.x = self.locations.x[self.genotypes.j,:]
+            self.locations.labels = self.locations.labels[self.genotypes.j]
 
 

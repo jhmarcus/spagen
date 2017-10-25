@@ -15,7 +15,6 @@ setup(
     tests_require=['pytest'],
     url='https://github.com/jhmarcus/spagen',
     packages=['spagen'],
-    install_requires=required,
     long_description='See ' + 'https://github.com/jhmarcus/spagen',
     license='MIT'
 )

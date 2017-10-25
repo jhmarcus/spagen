@@ -1,14 +1,8 @@
-cython
+click
 edward
-geopandas
-gpy
-matplotlib
 numpy
 pandas
-pysal
-pysam
-pytest
+scikit-learn
 scipy
-seaborn
 shapely
 tensorflow

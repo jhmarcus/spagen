@@ -74,8 +74,6 @@ class Genotypes(object):
     def _normalize(self):
         '''Mean center and scale the data matrix
         '''
-        #mu = np.nanmean(self.y, axis=1, keepdims=True)
-        #std = np.nanstd(self.y, axis=1, keepdims=True)
         self.y = scale(self.y, axis=1)
 
     def _impute(self):
