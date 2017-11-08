@@ -43,9 +43,14 @@ class Dataset(object):
         self.genotypes = Genotypes(traw, normalize, impute, n_samp, p_samp)
         self.positions = Positions(geo, hull_buffer)
 
-        # re-index geographic data if individuals are subsampled
         if n_samp != None:
-            self.positions.x = self.locations.x[self.genotypes.j,:]
-            self.positions.labels = self.locations.labels[self.genotypes.j]
+            # re-index individuals
+            self.positions.x = self.positions.x[self.genotypes.j,:]
+
+            # re-index labels
+            self.positions.labels = self.positions.labels[self.genotypes.j]
+
+            # re-define region
+            self.positions._define_region(self, hull_buffer)
 
 
